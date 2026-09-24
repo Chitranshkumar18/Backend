@@ -196,6 +196,56 @@ const logoutUser = asyncHandler(async(req,res)=>{
     )
 
 })
+
+
+const refreshAccessToken = asyncHandler(async(req,res) =>{
+    const incomingRefreshToken = req.cookie.refreshToken || req.body.refreshToken
+
+    if(!incomingRefreshToken){
+        throw new ApiError(401, "Unauthorized request")
+    }
+
+    try {
+        const decodedToken = JsonWebTokenError.verify(
+            incomingRefreshToken,
+            process.env.REFRESH_TOKEN_SECRET
+        )
+
+        const user = await User.findById(decodedToken?._id)
+
+        if(!user){
+            throw new ApiError(401, "Invalid Access Token")
+        }
+
+        if(incomingRefreshToken !== user?.refreshToken){
+            throw new ApiError(401, "Invalid Access Token")
+        }
+
+        const options ={
+            httpOnly : true,
+            secure: true
+        }
+        const {accessToken, newRefreshToken} = await generateAccessAndRefreshToken(user._id)
+
+        return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", newRefreshToken, options)
+        .json(
+            new ApiResponse(
+                200,
+                {accessToken, refreshToken: newRefreshToken},
+                "Access Token Refreshed Successfully"
+            )
+        )
+
+       
+    } catch (error) {
+        throw new ApiError(401, error?.message || "Invalid refresh token")
+    }
+})
+
+
     
     
 
@@ -205,5 +255,6 @@ const logoutUser = asyncHandler(async(req,res)=>{
 export {
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    refreshAccessToken
 }
