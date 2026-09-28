@@ -1,6 +1,6 @@
 import mongoose,{Mongoose, Schema}  from "mongoose";
 
-const likeSchema = Schema(
+const likeSchema = new Schema(
     {
         Comment:{
             type: Schema.Types.ObjectId,
