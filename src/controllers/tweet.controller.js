@@ -1,8 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError} from "../utils/ApiError.js"
 import { ApiResponse} from "../utils/ApiResponse.js"
-import { Video} from "../models/video.model.js"
-import { Comment } from "../models/comments.model.js"
 import { Tweet } from "../models/tweet.model.js"
 
 
@@ -136,10 +134,57 @@ const updateTweet = asyncHandler(async(req,res)=>{
 
 
 
+const deleteTweet = asyncHandler(async(req,res)=>{
+      //tweetId lena.
+      //Tweet find karna.
+      //Check karna tweet exist karta hai ya nahi.
+      //Check karna ki owner hi delete kar raha hai.
+      //Tweet delete karna.
+      //Delete operation successful hua ya nahi check karna.
+      //Success response return karna.
+
+    const { tweetId } = req.params;
+
+    if(!tweetId){
+        throw new ApiError(400, "tweetId is required");
+    }
+
+    const tweet = await Tweet.findById(tweetId);
+
+    if(!tweet){
+        throw new ApiError(404, "Tweet not found");
+    }
+
+    if(tweet.owner.toString() !== req.user._id.toString()){
+        throw new ApiError(
+            403,
+            "You are not allowed to delete this tweet"
+        );
+    }
+
+    const deletedTweet = await Tweet.findByIdAndDelete(tweetId);
+
+    if(!deletedTweet){
+        throw new ApiError(500, "Failed to delete tweet");
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                deletedTweet,
+                "Tweet deleted successfully"
+            )
+        );
+})
+
 
 
 
 export{
     createTweet,
+    getUserTweets,
     updateTweet,
+    deleteTweet,
 }
