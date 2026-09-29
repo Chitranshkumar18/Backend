@@ -102,7 +102,6 @@ const registerUser = asyncHandler( async (req, res) => {
 
 
 
-
 const loginUser = asyncHandler(async(req,res)=>{
 
     // get user details from frontend
@@ -446,8 +445,6 @@ const upadteUserCoverImage = asyncHandler(async(req,res)=>{
         new ApiResponse(200, channel[0], "User channel fetched successfully")
     )
 })
-
-
 
 
 
