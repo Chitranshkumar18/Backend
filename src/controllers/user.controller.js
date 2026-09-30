@@ -341,7 +341,7 @@ const updateUserAvatar = asyncHandler(async(req,res)=>{
 
 
 
-const upadteUserCoverImage = asyncHandler(async(req,res)=>{
+const updateUserCoverImage = asyncHandler(async(req,res)=>{
     const coverImagePath = req.file?.path
 
     if(!coverImagePath){
@@ -512,7 +512,7 @@ export {
     getCurrentUser,
     updateAccountDetails, 
     updateUserAvatar,
-    upadteUserCoverImage,
+    updateUserCoverImage,
     getUserChannelProfile,
     getWatchHistory
     
