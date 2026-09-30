@@ -4,6 +4,8 @@ import { ApiResponse} from "../utils/ApiResponse.js"
 import { Video} from "../models/video.model.js"
 import { Comment } from "../models/comments.model.js"
 import { Tweet } from "../models/tweet.model.js"
+import { Like } from "../models/like.model.js";
+
 
 
 
